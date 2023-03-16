@@ -1,0 +1,10 @@
+freeze(".",
+    (
+        "lab/__init__.py",
+        "lab/colors.py",
+        "lab/device_tools.py",
+        "lab/display_tools.py",
+        "lab/demos/__init__.py",
+        "lab/demos/lvgl_hello_world.py",
+    ),
+)
