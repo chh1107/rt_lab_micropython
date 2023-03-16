@@ -11,8 +11,8 @@ def _getinstance(class_, *args, **kwargs):
         _instances[class_] = class_(*args, **kwargs)
     return _instances[class_]
 
-def get_display(calibration=[-3, 16, 247, 337]):
-    return _getinstance(Display, calibration=calibration)
+def get_display(calibration_values=[-3, 16, 247, 337]):
+    return _getinstance(Display, calibration_values=calibration_values)
 
 
 class Display:
