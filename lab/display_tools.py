@@ -20,11 +20,11 @@ class Display:
     def __init__(self, calibration_values=None):
         lv.init()
         stm32f429disc_disp.init()
-        w = stm32f429disc_disp.lcd_width()
-        h = stm32f429disc_disp.lcd_height()
+        self.w = stm32f429disc_disp.lcd_width()
+        self.h = stm32f429disc_disp.lcd_height()
 
         draw_buf = lv.disp_draw_buf_t()
-        bufsz =  w * 30 * lv.color_t.__SIZE__
+        bufsz =  self.w * 30 * lv.color_t.__SIZE__
         buf1_1 = bytearray(bufsz)
         buf1_2 = bytearray(bufsz)
 
@@ -33,8 +33,8 @@ class Display:
         disp_drv.init()
         disp_drv.draw_buf = draw_buf
         disp_drv.flush_cb = stm32f429disc_disp.flush
-        disp_drv.hor_res = w
-        disp_drv.ver_res = h
+        disp_drv.hor_res = self.w
+        disp_drv.ver_res = self.h
         disp_drv.register()
 
         indev_drv = lv.indev_drv_t()
@@ -55,10 +55,10 @@ class Display:
         stm32f429disc_disp.deinit()
 
     def width(self):
-        return self.width
+        return self.w
 
     def height(self):
-        return self.height
+        return self.h
 
     def calibrate_touchscreen(self):
         calibration_points = [
