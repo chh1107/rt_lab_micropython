@@ -1,15 +1,12 @@
 # Based on the work by Thomas Hornschuh (https://github.com/ThomasHornschuh)
 
 import lvgl as lv
+
 from lv_utils import event_loop
 import stm32f429disc_disp
 
+from lab.device_tools import _getinstance
 
-_instances = {}
-def _getinstance(class_, *args, **kwargs):
-    if class_ not in _instances:
-        _instances[class_] = class_(*args, **kwargs)
-    return _instances[class_]
 
 def get_display(calibration_values=[-3, 16, 247, 337]):
     return _getinstance(Display, calibration_values=calibration_values)

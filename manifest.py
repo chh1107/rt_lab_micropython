@@ -15,5 +15,6 @@ freeze(".",
         "lab/gyro_tools.py",
         "lab/demos/__init__.py",
         "lab/demos/lvgl_hello_world.py",
+        "lab/demos/lvgl_gyro.py",
     ),
 )

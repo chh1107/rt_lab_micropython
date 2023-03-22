@@ -7,9 +7,29 @@
 # Copyright (c) 2017, 2018 Peter Hinch
 
 from math import sqrt, atan2, asin, degrees, radians
-from lab.deltat import DeltaT
 
-class GyroMadgwick(object):
+import stm32f429disc_gyro
+
+from lab.deltat import DeltaT
+from lab.device_tools import _getinstance
+
+
+def get_gyro():
+    return _getinstance(Gyro)
+
+
+class Gyro:
+    '''
+    Simple wrapper class for the low level gyro driver module
+    '''
+    def __init__(self):
+        stm32f429disc_gyro.init()
+
+    def read_xyz(self):
+        return stm32f429disc_gyro.read_xyz()
+
+
+class GyroMadgwick:
     '''
     Class provides sensor fusion allowing heading, pitch and roll to be extracted. This uses the Madgwick algorithm.
     The update method must be called peiodically. The calculations take 1.6mS on the Pyboard.
@@ -45,54 +65,12 @@ class GyroMadgwick(object):
         self.roll = degrees(atan2(2.0 * (self.q[0] * self.q[1] + self.q[2] * self.q[3]),
             self.q[0] * self.q[0] - self.q[1] * self.q[1] - self.q[2] * self.q[2] + self.q[3] * self.q[3]))
 
-    def run(self, gyro_obj, iterations=0, infinite=True):
+    def run(self, gyro_obj=None, iterations=0, infinite=True):
+        if gyro_obj is None:
+            gyro_obj = get_gyro()
         while infinite or iterations > 0:
-            gyro_mdps = (v / 1000.0 for v in gyro_obj.get_xyz())
+            gyro_mdps = (v / 1000.0 for v in gyro_obj.read_xyz())
             self.update(gyro_mdps)
             if not infinite:
                 iterations -= 1
             yield self.pitch, self.roll
-
-
-def main():
-    import gyro as g
-    g.init()
-    gm = GyroMadgwick()
-
-    from lab import display_tools
-    d = display_tools.Display()
-    w, h = d.width(), d.height()
-
-    import lvgl as lv
-    c_w, c_h = int(w * 0.5), h
-    b_w, b_h = int(w * 0.1), int(h * 0.8)
-    col_dsc = [c_w, c_w, lv.GRID_TEMPLATE_LAST]
-    row_dsc = [c_h, c_h, lv.GRID_TEMPLATE_LAST]
-
-    # Create a container with grid
-    cont = lv.obj(lv.scr_act())
-    cont.set_style_grid_column_dsc_array(col_dsc, 0)
-    cont.set_style_grid_row_dsc_array(row_dsc, 0)
-    cont.set_size(w, h)
-    cont.center()
-    cont.set_layout(lv.LAYOUT_GRID.value)
-
-    bar1 = lv.bar(cont)
-    bar1.set_size(b_w, b_h)
-    bar1.align(lv.ALIGN.CENTER, 0, 0)
-    bar1.set_range(-90, 90)
-    bar1.set_value(0, lv.ANIM.OFF)
-    bar1.set_grid_cell(lv.GRID_ALIGN.CENTER, 0, 1,
-                       lv.GRID_ALIGN.CENTER, 0, 1)
-
-    bar2 = lv.bar(cont)
-    bar2.set_size(b_w, b_h)
-    bar2.align(lv.ALIGN.CENTER, 0, 0)
-    bar2.set_range(-90, 90)
-    bar2.set_value(0, lv.ANIM.OFF)
-    bar2.set_grid_cell(lv.GRID_ALIGN.CENTER, 1, 1,
-                       lv.GRID_ALIGN.CENTER, 0, 1)
-
-    for pitch, roll in gm.run(g):
-        bar1.set_value(int(pitch), lv.ANIM.OFF)
-        bar2.set_value(int(roll), lv.ANIM.OFF)
