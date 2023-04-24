@@ -16,5 +16,16 @@ freeze(".",
         "lab/demos/__init__.py",
         "lab/demos/lvgl_hello_world.py",
         "lab/demos/lvgl_gyro.py",
+        "lab/demos/pyrtos_sample.py",
+    ),
+)
+
+freeze("pyRTOS",
+    (
+        "pyRTOS/__init__.py",
+        "pyRTOS/message.py",
+        "pyRTOS/pyRTOS.py",
+        "pyRTOS/scheduler.py",
+        "pyRTOS/task.py",
     ),
 )

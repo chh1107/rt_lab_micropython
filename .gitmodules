@@ -1,0 +1,3 @@
+[submodule "pyRTOS"]
+	path = pyRTOS
+	url = https://github.com/Rybec/pyRTOS.git
