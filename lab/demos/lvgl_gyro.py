@@ -10,6 +10,10 @@ def main():
     d = display_tools.get_display()
     w, h = d.width(), d.height()
 
+    import lv_utils
+    if not lv_utils.event_loop.is_running():
+        lv_utils.event_loop()
+
     c_w, c_h = int(w * 0.5), h
     b_w, b_h = int(w * 0.1), int(h * 0.8)
     col_dsc = [c_w, c_w, lv.GRID_TEMPLATE_LAST]

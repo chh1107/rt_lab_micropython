@@ -2,7 +2,6 @@
 
 import lvgl as lv
 
-from lv_utils import event_loop
 import stm32f429disc_disp
 
 from lab.device_tools import _getinstance
@@ -42,11 +41,6 @@ class Display:
 
         if calibration_values is not None:
             self.set_touchscreen_calibration_values(*calibration_values)
-
-        try:
-            event_loop()
-        except:
-            pass
 
     def __del__(self):
         stm32f429disc_disp.deinit()

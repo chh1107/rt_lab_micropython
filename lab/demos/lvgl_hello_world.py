@@ -42,6 +42,11 @@ def lv_anim_arc():
 
 def main():
     d = display_tools.get_display()
+
+    import lv_utils
+    if not lv_utils.event_loop.is_running():
+        lv_utils.event_loop()
+
     lv_hello_world()
     lv_anim_arc()
 
